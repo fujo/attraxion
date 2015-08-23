@@ -3,25 +3,45 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Brand New Web Site <?php echo get_the_title( $ID ); ?></title>
-  <meta name="description" content="The Brand New Web Site">
+  <title><?php echo get_bloginfo(); ?> - <?php echo get_the_title( $ID ); ?> </title>
+  <meta name="description" content="<?php echo get_bloginfo('description'); ?>">
   <meta name="author" content="Jonathan Fuchs">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <?php wp_head(); ?> 
   <script src="<?php echo get_bloginfo('template_directory'); ?>/js/vendor/modernizr.js"></script>
+  <!-- JS Globals -->
+  <script type="text/javascript">
+  var app_globals = {
+    url_base:   '<?php echo get_bloginfo('url'); ?>', 
+    url_path:   window.location.pathname, 
+    url_hash:   window.location.hash,
+    lang:       '<?php get_locale(); ?>',  
+    lat:        47.1167,
+    lng:        7.1167 
+  }
+  </script>
   <!--[if lt IE 9]>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 </head>
-<body>
+<body class="loaded">
+
+  <?php show_admin_bar( true ); ?>
+
   <div id="loader-wrapper">
     <div id="loader"></div>
   </div>
-  <div id="overlay">
+
+  <div id="ajax-overlay">
+    
+    <div class="ajax-content"></div>
+
   </div>
 
   <header>
-    <a href="<?php echo site_url();?>" title="Return to the homepage" id="logo">JNTHN.CH</a>
+    <a href="<?php echo site_url();?>" title="Return to the homepage" id="logo">
+      <img width="145" height="25" src="<?php echo get_bloginfo('template_directory'); ?>/img/logo_svg.svg">
+    </a>
     <a href="#" class="hamburger" rel="nofollow"><span></span></a>
     <nav id="mainNavWrapper">
     <?php
@@ -56,3 +76,4 @@
     ?>   
     </nav> 
   </header>
+  <div id="content">
