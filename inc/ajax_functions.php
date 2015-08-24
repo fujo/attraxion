@@ -16,19 +16,41 @@ function mon_action() {
 	die();
 }
 
-add_action( 'wp_ajax_get_post_content', 'get_post_content' );
-add_action( 'wp_ajax_nopriv_get_post_content', 'get_post_content' );
-function get_post_content() {
-
-	$url = $_POST['url'];
-
-	$postid = url_to_postid( get_site_url().$url ); 
-
-	echo $postid;
-
+//
+//
+//
+add_action( 'wp_ajax_get_all_posts', 'get_all_posts' );
+add_action( 'wp_ajax_nopriv_get_all_posts', 'get_all_posts' );
+function get_all_posts() {
+	global $post;
+	$query = new WP_Query(array('post_type' => 'post', 'orderby' => 'date', 'posts_per_page' => 2 ));
+	$posts = $query->get_posts();
+	include(locate_template( 'test.php' )); 
 	die();
-
-
-
-
+}
+//
+//
+//
+add_action( 'wp_ajax_get_posts_by_offset', 'get_posts_by_offset' );
+add_action( 'wp_ajax_nopriv_get_posts_by_offset', 'get_posts_by_offset' );
+function get_posts_by_offset() {
+	global $post;
+	$offset = $_POST['offset'];
+	$query = new WP_Query(array('post_type' => 'post', 'orderby' => 'date', 'offset' => $offset, 'posts_per_page' => 2 ));
+	$posts = $query->get_posts();
+	include(locate_template( 'test.php' )); 
+	die();
+}
+//
+//
+//
+add_action( 'wp_ajax_get_post_by_id', 'get_post_by_id' );
+add_action( 'wp_ajax_nopriv_get_post_by_id', 'get_post_by_id' );
+function get_post_by_id() {
+	global $post;
+	$id = $_POST['post_id'];
+	$query = new WP_Query(array('post_type' => 'post', 'orderby' => 'date', 'offset' => $offset, 'posts_per_page' => 2 ));
+	$posts = $query->get_posts();
+	include(locate_template( 'test.php' )); 
+	die();
 }
