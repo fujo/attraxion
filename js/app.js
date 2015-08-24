@@ -4,6 +4,81 @@
 https://learn.jquery.com/code-organization/concepts/
 
 */
+jQuery(document).ready(function(){
+
+	jQuery.ajax({
+		url: ajaxurl,
+		type: 'POST',
+		data: {
+		action: 'get_all_posts',
+		param: 'salut les terriens'
+		},
+		dataType: 'html',
+		success: function(response) {
+			 //alert(response);
+			 $('.ajax > .container').prepend(response);
+			 init_links();
+		}
+	});
+
+	$('#ajax-load').on('click', function(e) {
+
+		e.preventDefault();
+
+		var counter = $('.ajax > .container > .row').length;
+
+		console.log(counter);
+
+		jQuery.ajax({
+			url: ajaxurl,
+			type: 'POST',
+			data: {
+			action: 'get_posts_by_offset',
+			offset: counter
+			},
+			dataType: 'html',
+			success: function(response) {
+				//alert(response);
+				$('.ajax > .container').append(response);
+			}
+		});
+	});
+	
+	function init_links() {
+
+		$('.ajax .columns a').on('click', function(e) {
+
+			e.preventDefault();
+
+			console.log('clicked');
+
+			load_post($(this).attr('data-postid'));
+
+		})
+	}
+
+	function load_post(id) {
+
+		console.log(id);
+
+		jQuery.ajax({
+			url: ajaxurl,
+			type: 'POST',
+			data: {
+			action: 'get_post_by_id',
+			postid: id
+			},
+			dataType: 'html',
+			success: function(response) {
+				//alert(response);
+				$('body').append(response);
+			}
+		});
+
+	} 
+
+
+});
 ;(function($){
 
 	FastClick.attach(document.body); // instantiate FastClick 
