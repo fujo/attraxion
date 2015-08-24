@@ -6,20 +6,7 @@ https://learn.jquery.com/code-organization/concepts/
 */
 jQuery(document).ready(function(){
 
-	jQuery.ajax({
-		url: ajaxurl,
-		type: 'POST',
-		data: {
-		action: 'get_all_posts',
-		param: 'salut les terriens'
-		},
-		dataType: 'html',
-		success: function(response) {
-			 //alert(response);
-			 $('.ajax > .container').prepend(response);
-			 init_links();
-		}
-	});
+	
 
 	$('#ajax-load').on('click', function(e) {
 
@@ -61,19 +48,7 @@ jQuery(document).ready(function(){
 
 		console.log(id);
 
-		jQuery.ajax({
-			url: ajaxurl,
-			type: 'POST',
-			data: {
-			action: 'get_post_by_id',
-			postid: id
-			},
-			dataType: 'html',
-			success: function(response) {
-				//alert(response);
-				$('body').append(response);
-			}
-		});
+
 
 	} 
 
@@ -213,19 +188,13 @@ jQuery(document).ready(function(){
 
 		},
 
-
-
 		magnificpopup : {
 
 			_: function() {
 
 				var self = this;
 
-				$('.ajax-popup-link').magnificPopup({
-  					type: 'ajax'
-				});
-
-				$('.magnificpopup').each(function() {
+				$('.content a img').each(function() {
 
 					var self = this;
 
@@ -259,66 +228,57 @@ jQuery(document).ready(function(){
 				var self = this;
 
 				this.$as 			= $('a.ajax');
-				var $overlay 		= $('#ajax-overlay');
-				this.scrollTopPos	= 0;
-				//this.$content		= $('.content');
+				this.$overlay 		= $('#ajax-overlay');
 
-				this.$as.on('click', function(e){
+				this.$as.on('click', function(e) {
 					e.preventDefault();
-					var self = this, 
-						$this = $(this);
-					jQuery.post(
-						    ajaxurl, // var defined in functions.php
-						    {
-						        'action': 'get_post_content',
-						        'url': $this.attr('href')
-						    },
-						    function(response){
-						    	var self = this;
-						    	$overlay.find('.ajax-content').append(response);
-						    }
-						);
-
-
-					//href = $this.attr("href");
-					//self.scrollTopPos = $doc.scrollTop();
-					//self._load();
-				})
+					$('body').removeClass('loaded');
+					self._request('get_post_by_url', $(this).attr('href'));
+				});
 
 			},
-			_load: function(href) {
+
+			_request : function(action, param) {
 
 				var self = this;
 
-				$('body').removeClass('loaded');
-				this.$overlay.load( href + " .content", function(data) {
-				  	//alert( "Load was performed."+ data );
-					$('body').addClass('loaded');	
-				  	self.$overlay.css({'position': 'absolute' });
-				  	$doc.scrollTop(0);
-				  	self._initClose();
-				})
-				.addClass('show')
-				.offset().top;
+				jQuery.ajax({
+					url: ajaxurl,
+					type: 'POST',
+					data: {
+					action: action,
+					param: param
+					},
+					dataType: 'html',
+					success: function(response) {
 
-				//APP.loading._();
-
-				this.$content.height(0).css({'overflow': 'hidden'});
+						self._showOverlay(response);
+						
+					}
+				});
 
 			},
-			_initClose: function() {
+
+			_showOverlay : function(response) {
 
 				var self = this;
 
-				this.$btnC = this.$overlay.find('.close');
-				this.$btnC.on('click', function(e){
+				this.$overlay.addClass('show').find('.content').empty().append(response);
+				this.$overlay.find('a.close').on('click', function(e){
 					e.preventDefault();
-					self.$overlay.removeClass('show').css({'position': 'fixed' });
-					self.$content.removeAttr('style');
-					$doc.scrollTop(self.scrollTopPos);
+					self._hideOverlay();
 				})
+				$('body').addClass('loaded noscroll');
+
+			},
+
+			_hideOverlay : function() {
+
+				$('body').removeClass('noscroll');
+				this.$overlay.removeClass('show');
 
 			}
+
 		},
 
 		flexslider : {
@@ -417,6 +377,7 @@ jQuery(document).ready(function(){
 					masonry: {
 						// use outer width of grid-sizer for columnWidth
 						columnWidth: 'article.grid-sizer',
+						gutterWidth: 10
 						//gutter: '.gutter-sizer'
 					}
 					/*
@@ -664,9 +625,9 @@ jQuery(document).ready(function(){
 					panControl: false,
 					scrollwheel: false,
 					mapTypeId: google.maps.MapTypeId.ROADMAP,
-					styles:[{"featureType":"all","elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#000000"},{"lightness":40}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#000000"},{"lightness":16}]},{"featureType":"all","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":17},{"weight":1.2}]},{"featureType":"administrative","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"administrative.country","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"administrative.country","elementType":"geometry","stylers":[{"visibility":"simplified"}]},{"featureType":"administrative.country","elementType":"labels.text","stylers":[{"visibility":"simplified"}]},{"featureType":"administrative.province","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"administrative.locality","elementType":"all","stylers":[{"visibility":"simplified"},{"saturation":"-100"},{"lightness":"30"}]},{"featureType":"administrative.neighborhood","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"administrative.land_parcel","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"landscape","elementType":"all","stylers":[{"visibility":"simplified"},{"gamma":"0.00"},{"lightness":"74"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"landscape.man_made","elementType":"all","stylers":[{"lightness":"3"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":21}]},{"featureType":"road","elementType":"geometry","stylers":[{"visibility":"simplified"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":16}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":19}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":17}]}]
+					//styles:[{"featureType":"all","elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#000000"},{"lightness":40}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#000000"},{"lightness":16}]},{"featureType":"all","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":17},{"weight":1.2}]},{"featureType":"administrative","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"administrative.country","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"administrative.country","elementType":"geometry","stylers":[{"visibility":"simplified"}]},{"featureType":"administrative.country","elementType":"labels.text","stylers":[{"visibility":"simplified"}]},{"featureType":"administrative.province","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"administrative.locality","elementType":"all","stylers":[{"visibility":"simplified"},{"saturation":"-100"},{"lightness":"30"}]},{"featureType":"administrative.neighborhood","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"administrative.land_parcel","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"landscape","elementType":"all","stylers":[{"visibility":"simplified"},{"gamma":"0.00"},{"lightness":"74"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"landscape.man_made","elementType":"all","stylers":[{"lightness":"3"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":21}]},{"featureType":"road","elementType":"geometry","stylers":[{"visibility":"simplified"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":16}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":19}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":17}]}]
 						//styles:[{"stylers":[{"visibility":"simplified"}]},{"stylers":[{"color":"#131314"}]},{"featureType":"water","stylers":[{"color":"#131313"},{"lightness":7}]},{"elementType":"labels.text.fill","stylers":[{"visibility":"on"},{"lightness":25}]}]
-					}
+					styles:[{"featureType": "administrative", "elementType": "labels.text.fill", "stylers": [{"color": "#444444"} ] }, {"featureType": "landscape", "elementType": "all", "stylers": [{"color": "#f2f2f2"} ] }, {"featureType": "poi", "elementType": "all", "stylers": [{"visibility": "off"} ] }, {"featureType": "road", "elementType": "all", "stylers": [{"saturation": -100 }, {"lightness": 45 } ] }, {"featureType": "road.highway", "elementType": "all", "stylers": [{"visibility": "simplified"} ] }, {"featureType": "road.arterial", "elementType": "labels.icon", "stylers": [{"visibility": "off"} ] }, {"featureType": "transit", "elementType": "all", "stylers": [{"visibility": "off"} ] }, {"featureType": "water", "elementType": "all", "stylers": [{"color": "#46bcec"}, {"visibility": "on"} ] } ] }
 			},
 
 			_: function() {

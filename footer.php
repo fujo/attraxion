@@ -2,9 +2,17 @@
   <!-- footer -->
   <footer>
   	
+up
 
+
+
+Propulsed by wordpress Made with luv by renardsuper
 
   </footer>
+  <div id="ajax-overlay">
+    <a href="#" class="close">close</a>  
+    <div class="content"></div>
+  </div>
   <!-- Grab Google CDN's jQuery and load local version if necessary -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script type="text/javascript">

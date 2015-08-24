@@ -13,6 +13,20 @@ Text Domain:
 This theme, like WordPress, is licensed under the GPL.
 Use it to make something cool, have fun, and share what you've learned with others.
 */
+/*---------------------------------------------------------------------------------------------
+
+z-index layers
+
+loading     1000
+overlay     900
+mobile nav  800
+header      700
+
+
+
+
+
+
 
 /*---------------------------------------------------------------------------------------------
 /sass/modules
@@ -72,7 +86,7 @@ h2 { font: 700 5em/2.5em $font-family-hn; letter-spacing: -.05em; text-transform
   &:after { content:''; display: block; height: 5px; background: $white; width: 100px; margin: 0 auto 1em auto; @include rotate(-11deg); }
 
 }
-h3 { font: 400 2em/1.5em $font-family-em; letter-spacing: -.0em; }
+h3 { font: 400 2em/1.5em $font-family-hn; letter-spacing: -.05em; }
 h4 {}
 h5 {}
 h6 {}
@@ -176,8 +190,6 @@ Layout
   
 }
 
-/* .loaded #loader { opacity: 0; } */
-
 .loaded #loader-wrapper {  
 
   opacity: 0;
@@ -188,23 +200,9 @@ Layout
 
  }
 
-/* overlay */
-
-#overlay { position: fixed; right: -1000px; top: 0; width: 100%; height: 100%; min-height: 100%; z-index: 999; background: $white; opacity:0; visibility: collapse;
-  
-  -webkit-transition: .5s ease-in-out;
-  -moz-transition: .5s ease-in-out;
-  -o-transition: .5s ease-in-out;
-  transition: .5s ease-in-out;
-
-  &.show { opacity:1; visibility: visible; right: 0; }
-
-}
 /* main nav */
 
-body.noScroll { overflow: hidden; }
-
-#mainNavWrapper { position: fixed; z-index: 9999;  top: 0px; right:-3000px; bottom: 0; z-index: -2; width:100%; padding: 75px; background: white; min-height: 100%; opacity:0; visibility: hidden;
+#mainNavWrapper { position: fixed; z-index: 800;  top: 0px; right:-3000px; bottom: 0; z-index: -2; width:100%; padding: 75px; background: white; min-height: 100%; opacity:0; visibility: hidden;
   
   -webkit-transition: .5s ease-in-out;
   -moz-transition: .5s ease-in-out;
@@ -219,7 +217,7 @@ body.noScroll { overflow: hidden; }
 
 /* header */
 
-header { z-index: 99999; position: absolute; top:0; left:0; z-index:9999; width:100%; height:100px; height: 75px;
+header { position: absolute; z-index: 700; top:0; left:0; width:100%; height:100px; height: 75px;
 
   &.fixme { position: fixed; background: $secondary; }
 
@@ -267,7 +265,7 @@ header { z-index: 99999; position: absolute; top:0; left:0; z-index:9999; width:
 
   section.section {  position: relative; overflow: hidden; padding: 50px 0 100px 0; 
 
-    &:before { content:' '; position: absolute; top: -50%; left: -50%; height:630px; width: 200%; background: $secondary; @include rotate(11deg); opacity: 1; z-index: -99; }
+    &:before { content:' '; position: absolute; left: -100px; top: -200px; height:630px; width: 2000px; background: $secondary; @include rotate(11deg); opacity: 1; z-index: -99; }
 
   }
 
@@ -285,8 +283,6 @@ box-shadow:inset 0 -0px 10px 0 #000000;}
       &:after { content:' '; position: absolute; z-index: 99; bottom: -20%; left: -50%; height:40%; width: 200%; background: $white; opacity: 0.2; @include rotate(11deg); -webkit-box-shadow: 0 -0px 10px 0 #000000;
 box-shadow: 0 -0px 10px 0 #000000;}
     
-    
-
       .hero-jumbotron { position: absolute; width: 50%; left: 25%; text-align: left; z-index: 999; text-align: center; color: $white; }
 
       .hero-overlay { position: absolute; top: 0; left: 0; z-index: 9; min-height: 100%; width: 100%; background: $secondary; opacity: .6; }
@@ -388,17 +384,15 @@ box-shadow: 0 -0px 10px 0 #000000;}
 
 }
 
-#blog { 
+#blog { position: relative;
 
     article { position: relative; color: $white; background: #123456 url('') no-repeat center center fixed; @include background-size(cover); 
 
-      &.item { background: blue; width: 25%; height: 300px; }
+      &.item { background: blue; min-height: 400px; width: 25%;  }
 
       &.grid-sizer { width: 25%;  margin: 0; }
 
-      &.gutter-sizer { width: 0; display: none; }
-
-      &.last { background: red; width: 50%; }
+      &.last { width: 50%; }
 
       &:after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: $link; opacity: 0.9; z-index: 9; }
 
@@ -406,24 +400,22 @@ box-shadow: 0 -0px 10px 0 #000000;}
 
           &:after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: $link-hover; opacity: 0.5; z-index: 9; }
 
-          &:before { content: "\f054"; bottom:1px; right: 1px; font-family: 'icomoon'; position: absolute; margin: 0 0 0 10px; speak: none; font-style: normal; font-weight: normal; font-variant: normal; text-transform: none; line-height: 1; /* Better Font Rendering =========== */ -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-size: 75px; z-index: 99999;
+          &:before { content: "\f054"; bottom:1px; right: 1px; font-family: 'icomoon'; position: absolute; margin: 0 0 0 10px; speak: none; font-style: normal; font-weight: normal; font-variant: normal; text-transform: none; line-height: 1; /* Better Font Rendering =========== */ -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-size: 75px; z-index: 600;
 
           }
 
 
       }
 
-      .row { z-index: 10; position: relative; overflow: hidden;
+      .row { z-index: 10; position: relative; overflow: hidden; padding: 10px;
 
-        h3 { white-space: nowrap; overflow: hidden; }
+        figure { height: 100px; }
+
+        h3 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         span.date { width: 50px; text-align: center; display: block; text-transform: uppercase; font-weight: 700; margin: 0 0 0 -15px; padding: 5px; font-size: .8em; line-height: 0.8em;
 
-          &:before { content:''; width: 100%; position: absolute; top: 0; left: -75%; height: 50px; background: $loud; z-index: -1; 
-            
-              @include rotate(-11deg); 
 
-          }
 
         }
 
@@ -436,196 +428,27 @@ box-shadow: 0 -0px 10px 0 #000000;}
 
 #tshirts { background: $quiet url(../img/bg_tees.jpg) no-repeat center center fixed; @include background-size(cover);
 
+}
 
+#map {
+
+  #map-canvas { height: 500px; }
 
 }
 
 
 
+#ajax-overlay { position: fixed; z-index: 900; left: 0; top: 0; bottom: 0; right: 0; width: 100%; min-height: 100%; background: $white; opacity: 0; visibility: 0;  -webkit-transition: 2s; /* Safari */ transition: 2s; overflow-y: scroll; display: none;
 
-#inter--hero { position:relative; background: #123456 url(../bg3.jpg) no-repeat center center fixed; @include background-size(cover); 
+  &.show { visibility: visible; opacity: 1; display: block; }
 
-  .jumbotron { width: 100%; text-align: center; color: white; vertical-align: middle;display:table; position:absolute; top:40%; 
+  .content { position: static;
 
-    /* &:before { display: block; content: "\e7eb"; font-family: 'icomoon'; } */
-
-    h1 { color: $white; }
-
-    /*
-
-    span { display: block; overflow: hidden;
-
-      &:after,
-      &:before { content:''; display: block; height: 1px;  background: $white; margin: 20px 0;}
-
-    }
-
-    */
+    h2 { color: $black; line-height: 0.75em;  }
 
   }
 
 }
-/*  Adding height, width, viewBox, and CSS rules s */
-#fox { height: 79px; width: 113px; }
-
-#inter--1,
-#inter--2,
-#inter--3 { position:relative; background: #123456 url(../bg2.jpg) no-repeat 50% 50% fixed; @include background-size(cover);
-
-  overflow: hidden;
-
-  &:before { position: absolute; left: -40px; top: -35px; display: block; content: ''; height: 100px; width: 200%; background: $white; 
-
-    -moz-transform: rotate(3deg);
-    -ms-transform: rotate(3deg);
-    -o-transform: rotate(3deg);
-    -webkit-transform: rotate(3deg);
-
-    border-bottom: 10px solid $quiet;
-
-  }
-
-  &:after { position: absolute; left: -40px; bottom: -80px; display: block; content: ''; height: 100px; width: 200%; background: $white; 
-
-    -moz-transform: rotate(-3deg);
-    -ms-transform: rotate(3deg);
-    -o-transform: rotate(3deg);
-    -webkit-transform: rotate(3deg);
-
-    border-top: 10px solid $quiet;
-
-  }
-
-}
-
-.scrollDown { position: absolute; bottom: 25px; left: 0px; display: block; width:100%; text-align: center;  font-weight: 700; color: white; font-size:25px; cursor: pointer; 
-
-  &:after { display:block; font-family: "icomoon"; content: "\f078"; }
-
-  &.black { color: $black; }
-
-  &.bounce{
-
-    &.start { @include animation(bounce 4s infinite) }
-
-  }
-
-}
-
-.content section { padding: 100px 0; 
-
-  /*&:after { display: block; content: ""; width: 100%; background: red; height: 2px; }*/
-
-  .container { 
-
-      h2 { /*text-shadow: 4px 3px 0px #fff, 9px 8px 0px $link;*/
-
-        &:after { }
-
-      }
-
-  }
-
-}
-
-section#about { 
-
-  .container { 
-
-    .row {  }
-
-  }
-
-}
-
-section#series { 
-
-  .container { 
-
-    .row {  }
-
-  }
-
-}
-section#portfolio { 
-
-  .container { 
-
-    .row {  }
-
-  }
-
-}
-
-
-
-
-
-ul.isotope {
-
-  li { width: 32%; margin-bottom: 1%;
-
-    &.grid-sizer { margin-bottom: 0; }
-
-    &.gutter-sizer { width: 1%; margin-bottom: 0; }
-
-    &.wider { width: 65%; }
-
-  }
-
-}
-
-.grid { padding: 20px 20px 100px 20px; max-width: 1300px; margin: 0 auto; list-style: none; text-align: center; 
-
-  li { display: inline-block; width: 440px; margin: 0; padding: 20px; text-align: left; position: relative;
-
-    figure { margin: 0; position: relative; overflow: hidden;
-
-      img { max-width: 100%; display: block; position: relative; transition: transform 0.4s; }
-
-    }
-
-  }
-
-  figcaption { position: absolute; top: 0; left: 0; padding: 20px; background: #2c3f52; color: #ed4e6e;
-  
-  height: 100px;
-  width: 100%;
-  top: auto;
-  bottom: 0;
-  opacity: 0;
-  transform: translateY(100%);
-  transition: transform 0.4s, opacity 0.1s 0.3s;
-  background: blue;
-
-
-    h3 { margin: 0; padding: 0; color: #fff; }
-
-    /*span:before { content: 'by '; }*/
-
-    a { text-align: center; padding: 5px 10px; border-radius: 2px; display: inline-block; background: #ed4e6e; color: #fff; 
-
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-
-    }
-
-  }
-
-}
-
-.no-touch .grid figure:hover img,
-.grid figure img {
-  transform: translateY(-50px);
-}
-
-ul.portfolio { list-style: none;
-
-  li { list-style: none }
-
-}
-
 
 
 /*-------------------------------------------------------------------------------------------

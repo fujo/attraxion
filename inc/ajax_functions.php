@@ -48,9 +48,24 @@ add_action( 'wp_ajax_get_post_by_id', 'get_post_by_id' );
 add_action( 'wp_ajax_nopriv_get_post_by_id', 'get_post_by_id' );
 function get_post_by_id() {
 	global $post;
-	$id = $_POST['postid'];
+	$id = $_POST['param'];
 	$query = new WP_Query(array( 'p' => $id, 'post_type' => 'any' ));
 	$posts = $query->get_posts();
-	include(locate_template( 'test.php' )); 
+	include(locate_template( 'ajax_articles.php' )); 
 	die();
 }
+//
+//
+//
+add_action( 'wp_ajax_get_post_by_url', 'get_post_by_url' );
+add_action( 'wp_ajax_nopriv_get_post_by_url', 'get_post_by_url' );
+function get_post_by_url() {
+	global $post;
+	$url = $_POST['param'];
+	$id = url_to_postid( $url );
+	$query = new WP_Query(array( 'p' => $id, 'post_type' => 'any' ));
+	$posts = $query->get_posts();
+	include(locate_template( 'templates/ajax_post.php' )); 
+	die();
+}
+

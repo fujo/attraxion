@@ -175,26 +175,29 @@ $posts_array = get_posts( $args ); ?>
 
 <?php if(isset($posts_array)) : ?>
 
-<section id="blog" class="section isotope" data-route="blog">
+<section id="blog" class="section" data-route="blog">
 
   <div class="row">
     <div class="small-12 medium-7 medium-centered columns">
       <h2>blog</h2>
     </div>
-    <div class="isotope small-12 columns">
+    <div class="isotope">
       <article class="grid-sizer"></article>
-      <!--<article class="gutter-sizer"></article>-->
       <?php foreach ( $posts_array as $post ) : setup_postdata( $post ); ?>
       <?php $thumb_url =  wp_get_attachment_image_src(get_post_thumbnail_id(),'blog_thumb', true); ?>
-      <a href="<?php the_permalink(); ?>" class="ajax-popup-link" rel="nofollow">
+      <a href="<?php the_permalink(); ?>" class="ajax" rel="nofollow">
         <article id="<?php echo 'post-'.$id ?>" class="item <?php if($flagLastClass === 0) { 
             echo "last"; 
             $flagLastClass = 1;
           };
-          ?>" style="background: url(<?php echo $thumb_url[0]; ?>) no-repeat center center scroll;">
+          ?>" >
           <div class="row">
             <div class="large-12 columns">
-              <span class="date"><?php the_time('d') ?><br><?php the_time('M') ?></span>
+
+              <figure style="background: url(<?php echo $thumb_url[0]; ?>) no-repeat center center scroll;">
+              </figure>
+              <span class="date"><?php the_time('d') ?> <?php the_time('M') ?></span>
+
               <h3 class=""><?php the_title(); ?></h3>
               <?php the_excerpt(); ?>
               <!--<a href="<?php the_permalink(); ?>" class="btn icn more">more</a>-->
@@ -203,41 +206,16 @@ $posts_array = get_posts( $args ); ?>
         </article>
       </a>
       <?php endforeach; wp_reset_postdata();?>
-      <!--<article class="item">voir tous les articles</article>-->
+      
     </div>
+  </div>
+  <div class="small-12 medium-7 medium-centered columns">
+      <h4>loadmore</h4>
   </div>
  
 </section>
 <?php endif; ?>
 
-
-
-
-
-<?php 
-
-// GRAVIERE ++++++++++++++++++++++++++++++++++++++++++++++++++
-
-$page = get_posts(array('name' => 'graviere', 'post_type' => 'page') ); ?>
-<?php if(isset($page)) : ?>
-<section id="graviere" data-route="graviere">
-
-    <div class="row">
-      <div class="small-12 small-centered large-6 large-centered columns">
-      <h2 class="shadow"><?php echo $page[0]->post_title; ?></h2>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="small-12 small-centered large-6 large-centered columns">
-      <?php $content = apply_filters('the_content', $page[0]->post_content);
-      echo $content; ?>
-      <!--<a href="#contact" class="btn icn more scrollTo">Contact-nous!</a>-->
-      </div>
-    </div>
- 
-</section>
-<?php endif; ?>
 
 
 <?php 
@@ -261,8 +239,8 @@ $page = get_posts(array('name' => 'contact', 'post_type' => 'page') ); ?>
 
 
 
-<section id="map" class="winHeight">
-  <div id="map-canvas" style="width: 100%; height: 100%"></div>
+<section id="map" class="">
+  <div id="map-canvas"></div>
 </section>
 
 

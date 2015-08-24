@@ -32,12 +32,6 @@
     <div id="loader"></div>
   </div>
 
-  <div id="ajax-overlay">
-    
-    <div class="ajax-content"></div>
-
-  </div>
-
   <header>
     <a href="<?php echo site_url();?>" title="Return to the homepage" id="logo">
       <img width="145" height="25" src="<?php echo get_bloginfo('template_directory'); ?>/img/logo_svg.svg">
