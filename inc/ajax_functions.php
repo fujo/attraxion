@@ -48,8 +48,8 @@ add_action( 'wp_ajax_get_post_by_id', 'get_post_by_id' );
 add_action( 'wp_ajax_nopriv_get_post_by_id', 'get_post_by_id' );
 function get_post_by_id() {
 	global $post;
-	$id = $_POST['post_id'];
-	$query = new WP_Query(array('post_type' => 'post', 'orderby' => 'date', 'offset' => $offset, 'posts_per_page' => 2 ));
+	$id = $_POST['postid'];
+	$query = new WP_Query(array( 'p' => $id, 'post_type' => 'any' ));
 	$posts = $query->get_posts();
 	include(locate_template( 'test.php' )); 
 	die();
