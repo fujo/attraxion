@@ -22,10 +22,10 @@ https://learn.jquery.com/code-organization/concepts/
 
 		_: function () {
 
-			this.loader._();
-
 			this.routing._();
-
+			this.loader._();
+			this.mobileNav._();
+			this.hero._();
 
 			this.autoscroll._();
 			
@@ -33,15 +33,16 @@ https://learn.jquery.com/code-organization/concepts/
 			this.flexslider._();
 
 			this.events._();
-			this.ajax._();
-			this.mobileNav._();
-
+			
 			this.parallax._();
-		
 			this.helpers._();
 
-			this.googleMap._();
-			
+			// ASYNC loading
+			var self = this;
+			window.setTimeout(function() {
+				self.blog._();
+				self.googleMap._();
+			}, 5000);
 
 		},
 
@@ -164,7 +165,6 @@ https://learn.jquery.com/code-organization/concepts/
 		},
 
 
-
 		autoscroll : {
 
 			options : {
@@ -178,7 +178,6 @@ https://learn.jquery.com/code-organization/concepts/
 					options = this.options;
 
 				this.$h = $(app_globals.url_hash);
-
 				if(this.$h.length){
 					$('html, body').animate({scrollTop: self.$h.position().top }, options.animScrollSpeed, options.easing);
 				}
@@ -264,27 +263,25 @@ https://learn.jquery.com/code-organization/concepts/
 
 		},
 
-		ajax : {
+		// manage detail content
+
+		blog : {
 			_: function(){
 
-				var self = this;
-
-				this.$as 			= $('a.ajax');
-				this.$overlay 		= $('#ajax-overlay');
-
-
+				this.$blog = $('#blog');
+				this.$overlay = $('#ajax-overlay');
 
 				this._init();
-
 				this._loadMore();
 
 			},
 
+			// populate the blog with some posts
+			// called function is get_posts_by_offset
+
 			_init : function() {
 
 				var self = this;
-
-				// get_all_posts
 				jQuery.ajax({
 					url: ajaxurl,
 					type: 'POST',
@@ -293,66 +290,66 @@ https://learn.jquery.com/code-organization/concepts/
 					},
 					dataType: 'html',
 					success: function(response) {
-						//self._showOverlay(response);
-						$('#blog').find('.overview').append(response)
-						.find('li').last().addClass('end');
-						//APP.helpers.equalheights._();
-						//self._initOverlay();
-						//self._initIsotope();
-					}
-				});
-
-
-			},
-
-			_initOverlay : function() {
-
-				var self = this;
-
-				$('a.ajax').on('click', function(e) {
-					e.preventDefault();
-					//$('body').removeClass('loaded');
-					self._request('get_post_by_url', $(this).attr('href'));
-				});
-
-
-			},
-
-			_request : function(action, param) {
-
-				var self = this;
-				jQuery.ajax({
-					url: ajaxurl,
-					type: 'POST',
-					data: {
-					action: action,
-					param: param
-					},
-					dataType: 'html',
-					success: function(response) {
-						//self._showOverlay(response);
+						self.$blog.find('.overview').append(response)
+							.find('li').last().addClass('end');
+						APP.helpers.equalheights._();
+						// select elements
+						self._initDetail();
 					}
 				});
 
 			},
 
-			_showOverlay : function(response) {
+			// due the ajax loading
+			// we have to register the links as overlay triggers
+
+			_initDetail : function() {
 
 				var self = this;
 
-				this.$overlay.addClass('show').find('.content').empty().append(response);
-				this.$overlay.find('a.close').on('click', function(e){
+				this.$blog.on('click', 'article a', function(e) {
 					e.preventDefault();
-					self._hideOverlay();
-				})
+					jQuery.ajax({
+						url: ajaxurl,
+						type: 'POST',
+						data: {
+						action: 'get_post_by_id',
+						param: $(this).attr('data-id')
+						},
+						dataType: 'html',
+						beforeSend: function() {
+
+						},
+						success: function(response) {
+							
+							// self._showOverlay(response);
+							self.$overlay.addClass('show').find('.content')
+								.empty()			// remove existing content
+								.append(response); // add response content
+
+							self._initOverlay();
+
+						}
+					});
+
+				});
+
+			},
+
+			// it makes the overlay layer workable
+			// :-)
+
+			_initOverlay : function(response) {
+
+				var self = this;
+				// hide the body scroll...
 				$('body').addClass('noscroll');
-
-			},
-
-			_hideOverlay : function() {
-
-				$('body').removeClass('noscroll');
-				this.$overlay.removeClass('show');
+				// registering a close
+				this.$overlay.on('click', 'a.close', function(e){
+						e.preventDefault();
+						self.$overlay.removeClass('show');
+						$('body').removeClass('noscroll');
+				})
 
 			},
 
@@ -360,10 +357,10 @@ https://learn.jquery.com/code-organization/concepts/
 
 				var self = this;
 
-				$('.loadmore').on('click', function(e) {
+				this.$blog.on('click', '.loadmore', function(e) {
 					var self = this;
 					// request
-					$('body').removeClass('loaded');
+					// $('body').removeClass('loaded');
 					e.preventDefault();
 					// define offset post to load
 					var count = $('#blog').find('li').length;
@@ -376,6 +373,9 @@ https://learn.jquery.com/code-organization/concepts/
 							param: count
 							},
 							dataType: 'html',
+							beforeSend: function() {
+
+							},
 							success: function(response) {
 								$('#blog').find('.overview').append(response)
 									.find('li')
@@ -383,12 +383,52 @@ https://learn.jquery.com/code-organization/concepts/
 									.last().addClass('end');
 							
 								APP.helpers.equalheights._();
-								$('body').addClass('loaded');
+								// $('body').addClass('loaded');
 								if(response == '') $('.loadmore').hide();
 
 							},
 
 						});
+
+				})
+
+			}
+
+		},
+
+		hero : {
+
+			_: function() {
+
+				var self = this;
+
+				this.$hero = $('#hero');
+				this.$overlay = $('#ajax-overlay');
+
+				this.$hero.on('click','article a', function(e){
+					e.preventDefault();
+					jQuery.ajax({
+						url: ajaxurl,
+						type: 'POST',
+						data: {
+						action: 'get_post_by_id',
+						param: $(this).attr('data-id')
+						},
+						dataType: 'html',
+						beforeSend: function() {
+
+						},
+						success: function(response) {
+							
+							// self._showOverlay(response);
+							self.$overlay.addClass('show').find('.content')
+								.empty()			// remove existing content
+								.append(response); // add response content
+
+							APP.blog._initOverlay();
+
+						}
+					});
 
 				})
 
@@ -403,8 +443,8 @@ https://learn.jquery.com/code-organization/concepts/
 
 				  $('.flexslider').flexslider({
 				    	animation: "fade",
-				    	controlsContainer: $(".custom-controls-container"),
-				    	customDirectionNav: $(".custom-navigation a"),
+				    	//controlsContainer: $(".custom-controls-container"),
+				    	//customDirectionNav: $(".custom-navigation a"),
 			    	    animationLoop: true,
 			    	    smoothHeight: false
 				    	    /*
@@ -456,6 +496,7 @@ https://learn.jquery.com/code-organization/concepts/
 			_: function(){
 				var self = this;
 				this.$els = $('.parallax');
+				if(isTouch) return;
 				this.$els.each(function(){
 					var $el = $(this);
 					$win.on("scroll", function(e){
@@ -481,9 +522,9 @@ https://learn.jquery.com/code-organization/concepts/
 				this.fader._();
 				this.fixHeader._();
 
-				this.jumbotron._();
+	
 
-				this.scrollDown._();
+
 				this.scrollHome._();
 				this.scrollTo._();
 
@@ -555,7 +596,7 @@ https://learn.jquery.com/code-organization/concepts/
 						$('.animation').each(function(){
 						var imagePos = $(this).offset().top;
 						var topOfWindow = $(window).scrollTop();
-							if (imagePos < topOfWindow+600 ) {
+							if (imagePos < topOfWindow + 800 ) {
 								var a = $(this).attr('data-animation');
 								$(this).addClass(a);
 							}
@@ -585,23 +626,6 @@ https://learn.jquery.com/code-organization/concepts/
 				}
 			},
 
-			scrollDown : {
-				options : {
-					animScrollSpeed: 1000,
-					easing: "easeInOutQuint"
-				},
-				_: function() {
-					this.$sfm = $('.scrollDown');
-					if ( !this.$sfm.length ) return;
-					var options = this.options;
-					this.$sfm.on('click', function(e){
-						e.preventDefault();
-						var  $wH = $win.height();
-						$('html, body').animate({scrollTop: $wH }, options.animScrollSpeed, options.easing);
-					});
-				}
-			},
-
 			scrollHome : {
 				options : {
 					animScrollSpeed: 1000,
@@ -624,8 +648,8 @@ https://learn.jquery.com/code-organization/concepts/
 					easing: "easeInOutQuint"
 				},
 				_: function() {
-					this.$sfm = $('.scrollTo');
-					var headerH = $('header').outerHeight();
+					this.$sfm = $('#scrollTo');
+					var headerH = $('header').outerHeight() / 2;
 					if(this.$sfm.length < 1) return;
 					var options = this.options;
 					this.$sfm.on('click', function(e){
@@ -641,7 +665,7 @@ https://learn.jquery.com/code-organization/concepts/
 
 					$win.on('load resize', function(){
 						this.$as = $('.winHeight');
-						this.$as.css({'height':$win.height()});
+						this.$as.css({'height':$win.height(), 'min-height':$win.height()});
 					})
 				}
 			},
@@ -670,27 +694,7 @@ https://learn.jquery.com/code-organization/concepts/
 				}
 			},
 
-			jumbotron : {
-				options : { 
-				},
-				_: function() {
-					var self 	= 	this;
-					this.$j 	= 	$('.hero-jumbotron');
-					this.posX;
-					if(this.$j.length < 1 ){ return false };
-					this._init(); // position in the screen
-					
-					$doc.on('load scroll resize', function(){
-						var top = self.posX - $doc.scrollTop() * -0.5 ;
-						self.$j.css({ 'top': top })
-						//self._init();
-					});
-				},
-				_init: function() {
-					this.posX = ($win.height() / 2 ) - (this.$j.outerHeight() / 2) ;
-					this.$j.css({ 'top' : this.posX });
-				}
-			},
+
 
 			factsheet : {
 

@@ -6,6 +6,11 @@
 @media only screen and (max-width: 767px) {
     /* phones */
 
+	h1 {font-size: 3em; font-weight: 400;
+
+
+	}
+	h2 {font-size: 3em; }
 	header { height: 50px; line-height: 50px; padding: 0 10px; }
 	header #logo img { height: 30px; }
 	header.fixme #logo img { height: 30px; }

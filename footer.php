@@ -15,7 +15,7 @@ footer menu
 
   </footer>
   <div id="ajax-overlay">
-    <a href="#" class="close">close</a>  
+    <a href="#" class="close btn close">close</a>  
     <div class="content"></div>
   </div>
   <!-- Grab Google CDN's jQuery and load local version if necessary -->

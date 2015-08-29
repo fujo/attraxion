@@ -1,20 +1,13 @@
 <?php
 /*****************************************
 
-AJAX 
+AJAX Functions
 
 *****************************************/
-add_action( 'wp_ajax_mon_action', 'mon_action' );
-add_action( 'wp_ajax_nopriv_mon_action', 'mon_action' );
-function mon_action() {
-	$param = $_POST['param'];
-	echo $param;
-	die();
-}
-
 //
 //
 //
+/*
 add_action( 'wp_ajax_get_all_posts', 'get_all_posts' );
 add_action( 'wp_ajax_nopriv_get_all_posts', 'get_all_posts' );
 function get_all_posts() {
@@ -25,6 +18,7 @@ function get_all_posts() {
 	wp_reset_query(); 
 	die();
 }
+*/
 //
 //
 //
@@ -48,7 +42,7 @@ function get_post_by_id() {
 	$id = $_POST['param'];
 	$query = new WP_Query(array( 'p' => $id, 'post_type' => 'any' ));
 	$posts = $query->get_posts();
-	include(locate_template( 'ajax_articles.php' )); 
+	include(locate_template( 'templates/ajax_single.php' )); 
 	die();
 }
 //

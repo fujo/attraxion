@@ -1,17 +1,9 @@
 <?php
 
 error_reporting(E_ALL); ini_set('display_errors', 0);
+define('WP_MEMORY_LIMIT', '64M');
 
-function relativePathForUploads($fileInfos)
-{
-	global $blog_id;
-	$path = get_blog_option($blog_id,'siteurl');
 
-	$fileInfos['url'] = str_replace($path,'',$fileInfos['url']);
-
-	return $fileInfos;
-}
-add_filter('wp_handle_upload', 'relativePathForUploads');
 
 // disallow edition of theme files in wp-admin
 define( 'DISALLOW_FILE_EDIT', true );
@@ -59,7 +51,7 @@ function attraxion15_setup() {
 	// additional image sizes
 	// add_image_size ( string $name, int $width, int $height, bool|array $crop = false )
 	// delete the next line if you do not need additional image sizes
-	// add_image_size( 'category-thumb', 300, 9999 ); //300 pixels wide (and unlimited height)
+	// add_image_size( 'thumbnail', 300, 9999 ); //300 pixels wide (and unlimited height)
 	// add_image_size( 'large_thumb', 600, 600, true );
 	// add_image_size( 'blog_thumb', 600, 600, true );
 	// add_image_size( 'wider_image', 200, 150 );
@@ -99,6 +91,7 @@ function attraxion15_js_scripts() {
 	// pass var "ajaxurl" to app.js
 	wp_localize_script('app', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
 }
+
 /**
  * Register widget area.
  *
