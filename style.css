@@ -1,1 +1,22 @@
+/* 
+Theme Name: JNTHN_CH
+Theme URI: 
+Author: @jnthnfchs
+Author URI: http://jnthn.ch
+Description: 
+Version: 0.1
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: 
+Text Domain: 
+
+This theme, like WordPress, is licensed under the GPL.
+Use it to make something cool, have fun, and share what you've learned with others.
+*/
+
+/*
+
+!! SASS/COMPASS CSS COMPILATION !!
+
+*/
 @import url(css/style.css);

@@ -8,6 +8,11 @@ up
 
 Propulsed by wordpress Made with luv by renardsuper
 
+footer menu
+-app
+-impressum
+
+
   </footer>
   <div id="ajax-overlay">
     <a href="#" class="close">close</a>  

@@ -73,45 +73,54 @@ get_header(); ?>
 
 $page = get_posts(array('name' => 'club', 'post_type' => 'page') ); ?>
 <?php if(isset($page)) : ?>
+
 <section id="club" class="section">
   <article class="row">
-    <div class="small-12 medium-7 medium-centered columns">
-      <h2 class=""><?php echo $page[0]->post_title; ?></h2>
+    <div class="small-12 medium-6 medium-centered columns">
+      <h2 class="animation" data-animation="slideUp"><?php echo $page[0]->post_title; ?></h2>
+    </div>
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+    <div class="small-12 medium-6 medium-centered columns">
       <?php $content = apply_filters('the_content', $page[0]->post_content);
       echo $content; ?>
       <!--<a href="#contact" class="btn icn more scrollTo">Contact-nous!</a>-->
+    </div>
   </article>
 </section>
 
-<section id="factsheet" class="parallax">
 
-  <ul class="row">
+
+<section id="factsheet" class="parallax">
+  <ul class="row animation" data-animation="slideUp" >
     <li class="small-6 medium-3 columns">
-      <article class="animation" data-animation="slideUp" >
-        <div class="count">2</div>
-        bateaux de wake
+      <article>
+        <div class="count">45</div>
+        membres
       </article>
     </li>
     <li class="small-6 medium-3 columns">
-      <article class="animation" data-animation="slideUp">
+      <article>
         <div class="count">6</div>
         canoës
       </article>
     </li>
     <li class="small-6 medium-3 columns">
-      <article class="animation" data-animation="slideUp" >
+      <article>
         <div class="count">2</div>
         stand up paddle
       </article>
     </li>
     <li class="small-6 medium-3 columns">
-      <article class="animation" data-animation="slideUp" >
+      <article>
         <div class="count">1</div>
         trampoline
       </article>
     </li>
   </ul>
-
 </section>
 <?php endif; wp_reset_postdata(); ?>
 
@@ -120,27 +129,53 @@ $page = get_posts(array('name' => 'club', 'post_type' => 'page') ); ?>
 
 // PROGRAMME ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-$page = get_posts(array('name' => 'programme', 'post_type' => 'page') ); ?>
-<?php if(isset($page)) : ?>
-<section id="programme" class="section">
-
+$posts = get_posts(array('post_type' => 'event', 'posts_per_page' => -1, 'meta_key' => 'start_date', 'orderby' => 'start_date', 'post_status' => 'publish', 'order' => 'ASC' ) ); 
+$i=0; $tot = count($posts); 
+if(isset($posts)) : ?>
+<section id="programme" class="section" >
     <div class="row">
       <div class="small-12 medium-7 medium-centered columns">
-      <h2><?php echo $page[0]->post_title; ?></h2>
-      <?php $content = apply_filters('the_content', $page[0]->post_content);
-      echo $content; ?>
+        <h2 class="animation" data-animation="slideUp">programme</h2>
       </div>
     </div>
- 
+    <ul class="row overview equalHeights">
+      <?php foreach ( $posts as $post ) : setup_postdata( $post ); $i++; ?>
+      <li class="small-12 medium-6 large-3 columns <?php echo ($i == $tot ? 'end' : false); ?>">
+        <article>
+            <?php $date_s = new DateTime( get_field('start_date') ); ?>
+            <div class="date"><strong><?php echo ( get_field('date_text') ? get_field('date_text') : $date_s->format('d.m') ) ; ?></strong></div>
+            <?php $url = wp_get_attachment_url( get_post_thumbnail_id($post->ID) ); ?>
+            <figure style="background-image:url(<?php echo $url; ?>);"></figure>
+            <h3><?php the_title(); ?></h3>
+            <div class="meta">
+            <?php if(  get_field('start_time') ) : ?>
+            <span class="icon-access_alarms"></span> <?php echo get_field('start_time');?> <br>
+            <?php endif; ?>
+            <?php if(  get_field('place') ) : ?>
+            <span class="icon-place"></span> <?php echo get_field('place'); ?>
+            <?php endif; ?>
+            </div>
+            <?php the_content(); ?>
+        </article>
+      </li>
+    <?php endforeach; wp_reset_postdata();?>
+    </ul>
 </section>
-<?php endif; wp_reset_postdata();?>
-
-
+<?php endif; ?>
 
 
 
 
 <section id="tshirts" class="">
+
+    <div class="row">
+      <div class="small-12 medium-7 medium-centered columns">
+        <h2 class="animation" data-animation="slideUp">Tees!</h2>
+      </div>
+      <div class="small-12 medium-7 medium-centered columns">
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi voluptates amet blanditiis, quis asperiores voluptas fuga libero obcaecati nostrum odit labore commodi, delectus natus vel nam fugit repellat quae autem!
+    </div>
+  </div>
 
 
 </section>
@@ -151,89 +186,48 @@ $page = get_posts(array('name' => 'programme', 'post_type' => 'page') ); ?>
 
 // BLOG ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-$flagLastClass = 0;
-
-$args = array(
-  'posts_per_page'   => 7,
-  'offset'           => 0,
-  'category'         => '',
-  'category_name'    => '',
-  'orderby'          => 'date',
-  'order'            => 'DESC',
-  'include'          => '',
-  'exclude'          => '',
-  'meta_key'         => '',
-  'meta_value'       => '',
-  'post_type'        => 'post',
-  'post_mime_type'   => '',
-  'post_parent'      => '',
-  'author'     => '',
-  'post_status'      => 'publish',
-  'suppress_filters' => true 
-);
-$posts_array = get_posts( $args ); ?>
-
-<?php if(isset($posts_array)) : ?>
-
+?>
 <section id="blog" class="section" data-route="blog">
-
   <div class="row">
     <div class="small-12 medium-7 medium-centered columns">
-      <h2>blog</h2>
-    </div>
-    <div class="isotope">
-      <article class="grid-sizer"></article>
-      <?php foreach ( $posts_array as $post ) : setup_postdata( $post ); ?>
-      <?php $thumb_url =  wp_get_attachment_image_src(get_post_thumbnail_id(),'blog_thumb', true); ?>
-      <a href="<?php the_permalink(); ?>" class="ajax" rel="nofollow">
-        <article id="<?php echo 'post-'.$id ?>" class="item <?php if($flagLastClass === 0) { 
-            echo "last"; 
-            $flagLastClass = 1;
-          };
-          ?>" >
-          <div class="row">
-            <div class="large-12 columns">
-
-              <figure style="background: url(<?php echo $thumb_url[0]; ?>) no-repeat center center scroll;">
-              </figure>
-              <span class="date"><?php the_time('d') ?> <?php the_time('M') ?></span>
-
-              <h3 class=""><?php the_title(); ?></h3>
-              <?php the_excerpt(); ?>
-              <!--<a href="<?php the_permalink(); ?>" class="btn icn more">more</a>-->
-            </div>
-          </div>
-        </article>
-      </a>
-      <?php endforeach; wp_reset_postdata();?>
-      
+      <h2 class="animation" data-animation="slideUp" >blog</h2>
     </div>
   </div>
-  <div class="small-12 medium-7 medium-centered columns">
-      <h4>loadmore</h4>
+  <ul class="row overview equalHeights">
+  <!-- blogs teaser container -->
+  </ul>
+  <div class="row">
+    <div class="small-12 medium-7 medium-centered columns">
+      <a href="#" class="loadmore btn more loading" >plus vieux</a>
+    </div>
   </div>
- 
 </section>
-<?php endif; ?>
+
 
 
 
 <?php 
 
-// PROGRAMME ++++++++++++++++++++++++++++++++++++++++++++++++++
+// CONTACT ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 $page = get_posts(array('name' => 'contact', 'post_type' => 'page') ); ?>
 <?php if(isset($page)) : ?>
-<section id="contact" class="section">
 
+<section id="contact" class="section">
     <div class="row">
       <div class="small-12 medium-7 medium-centered columns">
-      <h2><?php echo $page[0]->post_title; ?></h2>
+        <h2 class="animation" data-animation="slideUp" ><?php echo $page[0]->post_title; ?></h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 medium-6 push-2 columns">
       <?php $content = apply_filters('the_content', $page[0]->post_content);
       echo $content; ?>
       </div>
+      <div class="small-12 medium-6 columns">
+      <?php echo do_shortcode("[si-contact-form form=1]"); ?>
+      </div>
     </div>
- 
 </section>
 <?php endif; wp_reset_postdata();?>
 

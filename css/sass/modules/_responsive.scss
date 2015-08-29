@@ -1,0 +1,28 @@
+@media only screen and (min-width: 768px) {
+    /* tablets and desktop */
+
+}
+
+@media only screen and (max-width: 767px) {
+    /* phones */
+
+	header { height: 50px; line-height: 50px; padding: 0 10px; }
+	header #logo img { height: 30px; }
+	header.fixme #logo img { height: 30px; }
+	header .hamburger { display: block; }
+    nav.main { display: none; }
+
+    #factsheet ul li article { width: 100px; height: 100px; padding: 0; 
+
+		div.count { font-size: 2em; margin: 0; padding-top: 20px;}
+
+    }
+
+
+    .columns { margin-bottom: 0px; }
+}
+
+@media only screen and (max-width: 767px) and (orientation: portrait) {
+    /* portrait phones */
+    
+}

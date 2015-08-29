@@ -2,7 +2,8 @@
 <html lang="en" class="no-js">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
   <title><?php echo get_bloginfo(); ?> - <?php echo get_the_title( $ID ); ?> </title>
   <meta name="description" content="<?php echo get_bloginfo('description'); ?>">
   <meta name="author" content="Jonathan Fuchs">
@@ -25,41 +26,12 @@
   <![endif]-->
 </head>
 <body class="loaded">
-
   <?php show_admin_bar( true ); ?>
-
   <div id="loader-wrapper">
     <div id="loader"></div>
   </div>
-
-  <header>
-    <a href="<?php echo site_url();?>" title="Return to the homepage" id="logo">
-      <img width="145" height="25" src="<?php echo get_bloginfo('template_directory'); ?>/img/logo_svg.svg">
-    </a>
-    <a href="#" class="hamburger" rel="nofollow"><span></span></a>
-    <nav id="mainNavWrapper">
+  <nav class="mobile">
     <?php
-    /*
-      $defaults = array(
-        'theme_location'  => '',
-        'menu'            => '',
-        'container'       => '',
-        'container_class' => '',
-        'container_id'    => '',
-        'menu_class'      => 'menu',
-        'menu_id'         => 'mainNav',
-        'echo'            => true,
-        'fallback_cb'     => 'wp_page_menu',
-        'before'          => '',
-        'after'           => '',
-        'link_before'     => '',
-        'link_after'      => '',
-        'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
-        'depth'           => 0,
-        'walker'          => ''
-      );
-      //wp_nav_menu( $defaults ); // printed with ul+li
-      */
       $menuParameters = array(
         'container'       => false,
         'echo'            => false,
@@ -68,6 +40,22 @@
       );
       echo strip_tags(wp_nav_menu( $menuParameters ), '<a>' );
     ?>   
-    </nav> 
+  </nav>
+  <header>
+    <a href="<?php echo site_url();?>" title="Retour à la page d'accueil" id="logo">
+      <img src="<?php echo get_bloginfo('template_directory'); ?>/img/logo_svg_goutte.svg">
+    </a>
+    <nav class="main">
+    <?php
+      $menuParameters = array(
+        'container'       => false,
+        'echo'            => false,
+        'items_wrap'      => '%3$s',
+        'depth'           => 0,
+      );
+      echo strip_tags(wp_nav_menu( $menuParameters ), '<a>' );
+    ?>
+    </nav>
+    <a href="#" class="hamburger" rel="nofollow"><span></span></a>
   </header>
   <div id="content">

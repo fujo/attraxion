@@ -7,3 +7,6 @@
 
 # cache
 /css/sass/.sass-cache/
+
+# node-js
+/node_modules/

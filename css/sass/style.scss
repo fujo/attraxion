@@ -1,18 +1,3 @@
-/* 
-Theme Name: JNTHN_CH
-Theme URI: 
-Author: @jnthnfchs
-Author URI: http://jnthn.ch
-Description: 
-Version: 0.1
-License: GNU General Public License v2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Tags: 
-Text Domain: 
-
-This theme, like WordPress, is licensed under the GPL.
-Use it to make something cool, have fun, and share what you've learned with others.
-*/
 /*---------------------------------------------------------------------------------------------
 
 z-index layers
@@ -22,11 +7,26 @@ overlay     900
 mobile nav  800
 header      700
 
+/*-------------------------------------------------------------------------------------------
+Vars
+--------------------------------------------------------------------------------------------*/
+$gridW:           70em;
+$gutterW:         0,95;
 
+$color:           #222;
+$primary:         #23aac4;
+$secondary:       #23aac4; /* #003249; */
+$quiet:           #565554;
+$loud:            #23aac4; /* 93032E */
+$white:           white;
+$black:           black;
 
+$font-family:     'Open Sans', Arial, sans-serif;
+$font-family-hn:  'Roboto Condensed', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$font-family-em:  'Pacifico', cursive;
 
-
-
+$link:            #23AAC4;
+$link-hover:      #93032E;
 
 /*---------------------------------------------------------------------------------------------
 /sass/modules
@@ -45,21 +45,6 @@ import
 @import url(http://fonts.googleapis.com/css?family=Open+Sans);
 @import url(http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300);
 /*-------------------------------------------------------------------------------------------
-Vars
---------------------------------------------------------------------------------------------*/
-$primary:         #23aac4;
-$secondary:       #003249;
-$quiet:           #565554;
-$loud:            #93032E;
-$white:           white;
-$black:           black;
-$link:            #23AAC4;
-$link-hover:      #93032E;
-$font-family:     'Open Sans', Arial, sans-serif;
-$font-family-hn:  'Roboto Condensed', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-$font-family-em:  'Pacifico', cursive;
-$color:           #222;
-/*-------------------------------------------------------------------------------------------
 Basic
 --------------------------------------------------------------------------------------------*/
 *,
@@ -72,7 +57,7 @@ body { height: 100%; font-size: 100%; overflow: none; }
 /*-------------------------------------------------------------------------------------------
 Fonts
 --------------------------------------------------------------------------------------------*/
-body { font: normal 1em/1.6em $font-family; color: $color; }
+body { font: normal 1em/1.7em $font-family; color: $color; }
 
 h1, h2, h3, h4, h5, h6, p { margin: 0; } 
 
@@ -81,12 +66,12 @@ h1 { font: 700 7em/1.5em $font-family-em; letter-spacing: -0em; text-transform: 
   &:after { content:''; display: block; height: 10px; background: $white; width: 220px; margin: 0 auto 0.3em auto; @include rotate(-11deg); }
 
 }
-h2 { font: 700 5em/2.5em $font-family-hn; letter-spacing: -.05em; text-transform: lowercase; color: $white; text-align: center; position: relative;
+h2 { font: 700 5em/2.5em $font-family-hn; letter-spacing: -.05em; text-transform: lowercase; color: $black; text-align: center; position: relative;
 
-  &:after { content:''; display: block; height: 5px; background: $white; width: 100px; margin: 0 auto 1em auto; @include rotate(-11deg); }
+  &:after { content:''; display: block; height: 10px; background: $loud; width: 100px; margin: 0 auto 1em auto; @include rotate(-11deg); }
 
 }
-h3 { font: 400 2em/1.5em $font-family-hn; letter-spacing: -.05em; }
+h3 { font: 300 2em/1.5em $font-family-em; letter-spacing: 0.05em; }
 h4 {}
 h5 {}
 h6 {}
@@ -145,6 +130,9 @@ a { color: $link; text-decoration: none;
 
     }
 
+
+    &.loading { }
+
   }
 
 }
@@ -200,48 +188,72 @@ Layout
 
  }
 
-/* main nav */
+nav.mobile { position: fixed; z-index: 800; top: 50px; left: 0; width: 100%; background: $primary; display: none;
 
-#mainNavWrapper { position: fixed; z-index: 800;  top: 0px; right:-3000px; bottom: 0; z-index: -2; width:100%; padding: 75px; background: white; min-height: 100%; opacity:0; visibility: hidden;
-  
-  -webkit-transition: .5s ease-in-out;
-  -moz-transition: .5s ease-in-out;
-  -o-transition: .5s ease-in-out;
-  transition: .5s ease-in-out;
+  &.open { display: block; }
 
-  &.open { opacity:1; visibility: visible; right:0px; }
+  a { display: block; height: 75px; padding: 0 5px; font: 700 1.6em/75px $font-family-hn; color: $white; text-transform: uppercase; text-align: center;
 
-  a { font: 300 2em/75px $font-family-hn; height: 75px;  text-transform: uppercase; display: block; text-align:center; }
+    &:hover { color: $black; }
+
+  }
 
 }
 
+
 /* header */
 
-header { position: absolute; z-index: 700; top:0; left:0; width:100%; height:100px; height: 75px;
+header { position: absolute; z-index: 700; top:0; left:0; width:100%; line-height: 100px;padding: 0 25px;
 
-  &.fixme { position: fixed; background: $secondary; }
+  &.fixme { position: fixed; background: $secondary; top: 0; right: 0; left: 0; 
 
-  #logo { float: left; line-height: 75px; font-size: 25px; font-weight: 700; padding:0 0 0 25px; color: $white; font-family: $font-family-hn; 
+    #logo {  
 
-    img { height: 25px; }
+      img { height: 50px; }
+
+      /*&:after { content: "\e7eb"; font-family: 'icomoon'; }*/
+
+    }
+
+     nav.main { float: right;
+
+
+    }
+
+  }
+
+  #logo { display: block; float: left;
+
+    img { height: 50px; }
 
     /*&:after { content: "\e7eb"; font-family: 'icomoon'; }*/
 
   }
 
-  a.hamburger { line-height: 75px; float:right; cursor: pointer; padding: 0px 0px 0px 0px; height: 75px; width: 75px; position: relative; text-align: center; display:block;
+  nav.main { float: right;
+
+    a { display: inline-block; height: 100px; padding: 0 5px; font: 700 1.6em/100px $font-family-hn; color: $white; text-transform: uppercase; 
+
+      &:hover { color: $black; }
+
+    }
+
+  }
+
+
+  .hamburger { line-height: 50px; float:right; cursor: pointer; padding: 0px 0px 0px 0px; height: 50px; width: 55px; position: relative; text-align: center; display:none;
 
     span, 
     span:before,
     span:after { left:25px; cursor: pointer; border-radius: 1px; height: 5px; width: 25px; background: $white; position: absolute; display: block; content: ''; transition: all 100ms ease-in-out; -webkit-transition: all 100ms ease-in-out; }
 
-    span { top:35px; }
+    span { top:22px; }
 
     span:before { top:-10px; left:0; }
 
     span:after { bottom:-10px; left:0; }
 
-    &.active { background: $link; 
+    &.active {  
 
       span { background-color: transparent; }
 
@@ -265,7 +277,52 @@ header { position: absolute; z-index: 700; top:0; left:0; width:100%; height:100
 
   section.section {  position: relative; overflow: hidden; padding: 50px 0 100px 0; 
 
-    &:before { content:' '; position: absolute; left: -100px; top: -200px; height:630px; width: 2000px; background: $secondary; @include rotate(11deg); opacity: 1; z-index: -99; }
+    /*background: $quiet url(../img/bg_water.jpg) no-repeat 50% 50% ; @include background-size(cover); 
+/*
+    &:before { content:' '; position: absolute; left: -100px; top: -200px; height:630px; width: 2000px; background: $secondary; @include rotate(11deg); opacity: 1; z-index: -99;  }
+*/
+    article p { background: $white; }
+
+  figure { position: relative; height: 150px; margin: 0 0 5px 0; background: $loud url() no-repeat center center; @include background-size(cover); }
+ 
+
+    .overview {
+
+      article { position: relative; min-height: 100%; overflow: hidden; background: $white; margin: 0 0 1.8em 0; padding: 0 0 20px 0; 
+        /*
+        &:before { content: ''; position: absolute; top: -10px; right: -10px; z-index: 500; display: block; background: $white; height: 40px; width: 100px; transform: rotate(10deg); -webkit-transform: rotate(10deg);}
+        */
+        .date { position: relative; background-color: $loud; height: 40px; padding: 0px 10px; color: white; display: inline-block; text-transform: uppercase; font: 700 1.5em/40px $font-family-hn;
+
+          &:before { content: '\A'; position: absolute; top: -0px; right: -40px; z-index: 500; display: block; background:  $loud;
+
+transform: rotate(-90deg); -webkit-transform: rotate(-90deg);
+
+
+          border-style: solid;
+        border-width: 20px 60px 0px 0;
+    border-color: transparent #fff transparent transparent;}
+
+        }
+
+        figure { position: relative; overflow: hidden; height: 150px; margin: 0 0 5px 0; background: $loud url() no-repeat center center; @include background-size(cover); 
+
+          &:after { content: ''; position: absolute; top: -15px; right: -30px; z-index: 500; display: block; background: $white; opacity: 0.1; height: 200px; width: 60%; transform: rotate(20deg); -webkit-transform: rotate(20deg);}
+
+
+            &:before { content:''; position: absolute; left: 0px; top: 0px; min-height:100%; width: 100%; background: $black; opacity: 0.6; } 
+
+          }
+
+        h3 { position: absolute; top: 90px; width: 100%; white-space: nowrap; overflow: hidden; text-align: center; color: $white;  }
+
+        .meta { min-height: 55px; border-bottom: 1px solid #999; }
+
+        p { font-size: 0.9em; }
+
+      }
+
+    }
 
   }
 
@@ -273,16 +330,18 @@ header { position: absolute; z-index: 700; top:0; left:0; width:100%; height:100
 
 #hero { position: relative; overflow: hidden; min-height: 800px;
 
-  ul.slides {
+  ul.slides { overflow: hidden;
 
-    li { text-align: center; position: relative; background: #123456 url('') no-repeat center center fixed; @include background-size(cover);  
+    li { text-align: center; position: relative; background: #123456 url('') no-repeat center center fixed; @include background-size(cover); overflow: hidden;
     /*
       &:before { content:' '; position: absolute; z-index: 99; top: -70%; left: -50%; height:80%; width: 200%; background: $white; opacity: 0.1; @include rotate(-11deg); -webkit-box-shadow:inset 0 -0px 10px 0 #000000;
 box-shadow:inset 0 -0px 10px 0 #000000;}
-      */
-      &:after { content:' '; position: absolute; z-index: 99; bottom: -20%; left: -50%; height:40%; width: 200%; background: $white; opacity: 0.2; @include rotate(11deg); -webkit-box-shadow: 0 -0px 10px 0 #000000;
-box-shadow: 0 -0px 10px 0 #000000;}
     
+      &:after { content:' '; position: absolute; z-index: 99; bottom: -20%; left: -50%; height:40%; width: 200%; background: $secondary; opacity: 0.2; @include rotate(11deg); }
+      */
+
+      &:after { content: ''; position: absolute; top: -300px; right: -300px; z-index: 500; display: block; background: $white; opacity: 0.1; height: 2000px; width: 60%; transform: rotate(20deg); -webkit-transform: rotate(20deg);}
+
       .hero-jumbotron { position: absolute; width: 50%; left: 25%; text-align: left; z-index: 999; text-align: center; color: $white; }
 
       .hero-overlay { position: absolute; top: 0; left: 0; z-index: 9; min-height: 100%; width: 100%; background: $secondary; opacity: .6; }
@@ -357,15 +416,15 @@ box-shadow: 0 -0px 10px 0 #000000;}
 
 }
 
-#factsheet { background: $quiet url(../img/bg_water.jpg) no-repeat 50% 50% fixed; @include background-size(cover); position: relative; overflow: hidden;
+#factsheet { /*background: $quiet url(../img/bg_water.jpg) no-repeat 50% 50% fixed; @include background-size(cover); position: relative; overflow: hidden;*/
 
-  &:after { content:' '; position: absolute; z-index: 99; bottom: -20%; left: -50%; height:40%; width: 200%; background: $white; opacity: 0.2; @include rotate(11deg); }
+ background-color: $loud;
 
   ul {
 
     li { 
 
-      article{ height: 200px; width: 200px; @include border-radius(50%); margin: 0 auto; text-align: center; background: $white; color: $primary; padding: 70px 0;
+      article{ height: 200px; width: 200px; @include border-radius(50%); margin: 0 auto; text-align: center; background: $white; padding: 70px 0;
 
         div.count { font-size: 4em; font-weight: bold; font-family: $font-family-hn; margin: 0 0 10px 0; 
 
@@ -384,47 +443,7 @@ box-shadow: 0 -0px 10px 0 #000000;}
 
 }
 
-#blog { position: relative;
-
-    article { position: relative; color: $white; background: #123456 url('') no-repeat center center fixed; @include background-size(cover); 
-
-      &.item { background: blue; min-height: 400px; width: 25%;  }
-
-      &.grid-sizer { width: 25%;  margin: 0; }
-
-      &.last { width: 50%; }
-
-      &:after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: $link; opacity: 0.9; z-index: 9; }
-
-      &:hover {  
-
-          &:after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: $link-hover; opacity: 0.5; z-index: 9; }
-
-          &:before { content: "\f054"; bottom:1px; right: 1px; font-family: 'icomoon'; position: absolute; margin: 0 0 0 10px; speak: none; font-style: normal; font-weight: normal; font-variant: normal; text-transform: none; line-height: 1; /* Better Font Rendering =========== */ -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-size: 75px; z-index: 600;
-
-          }
-
-
-      }
-
-      .row { z-index: 10; position: relative; overflow: hidden; padding: 10px;
-
-        figure { height: 100px; }
-
-        h3 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        span.date { width: 50px; text-align: center; display: block; text-transform: uppercase; font-weight: 700; margin: 0 0 0 -15px; padding: 5px; font-size: .8em; line-height: 0.8em;
-
-
-
-        }
-
-      }
-
-
-    }
-
-}
+#blog { position: relative; }
 
 #tshirts { background: $quiet url(../img/bg_tees.jpg) no-repeat center center fixed; @include background-size(cover);
 
@@ -437,10 +456,9 @@ box-shadow: 0 -0px 10px 0 #000000;}
 }
 
 
+#ajax-overlay { position: fixed; z-index: 900; left: 0; top: 0; right: 0; bottom: 0; width: 100%; min-height: 100%; overflow-y: scroll; background: $white; -webkit-transition: 0.2s; /* Safari */ transition: 0.2s;  translate: translateY(-300px); display: none;
 
-#ajax-overlay { position: fixed; z-index: 900; left: 0; top: 0; bottom: 0; right: 0; width: 100%; min-height: 100%; background: $white; opacity: 0; visibility: 0;  -webkit-transition: 2s; /* Safari */ transition: 2s; overflow-y: scroll; display: none;
-
-  &.show { visibility: visible; opacity: 1; display: block; }
+  &.show {  }
 
   .content { position: static;
 
@@ -450,9 +468,12 @@ box-shadow: 0 -0px 10px 0 #000000;}
 
 }
 
+footer { background: $black; }
+
 
 /*-------------------------------------------------------------------------------------------
 /sass/partials
 --------------------------------------------------------------------------------------------*/
 @import 'partials/form';
 @import 'partials/magnific-popup';
+@import 'modules/responsive';

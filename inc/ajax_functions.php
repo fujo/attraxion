@@ -6,13 +6,9 @@ AJAX
 *****************************************/
 add_action( 'wp_ajax_mon_action', 'mon_action' );
 add_action( 'wp_ajax_nopriv_mon_action', 'mon_action' );
-
 function mon_action() {
-
 	$param = $_POST['param'];
-
 	echo $param;
-
 	die();
 }
 
@@ -23,9 +19,10 @@ add_action( 'wp_ajax_get_all_posts', 'get_all_posts' );
 add_action( 'wp_ajax_nopriv_get_all_posts', 'get_all_posts' );
 function get_all_posts() {
 	global $post;
-	$query = new WP_Query(array('post_type' => 'post', 'orderby' => 'date', 'posts_per_page' => 2 ));
+	$query = new WP_Query(array('post_type' => 'post', 'orderby' => 'date', 'posts_per_page' => 8 ));
 	$posts = $query->get_posts();
-	include(locate_template( 'test.php' )); 
+	include(locate_template( 'templates/ajax_post_archive.php' )); 
+	wp_reset_query(); 
 	die();
 }
 //
@@ -35,10 +32,10 @@ add_action( 'wp_ajax_get_posts_by_offset', 'get_posts_by_offset' );
 add_action( 'wp_ajax_nopriv_get_posts_by_offset', 'get_posts_by_offset' );
 function get_posts_by_offset() {
 	global $post;
-	$offset = $_POST['offset'];
-	$query = new WP_Query(array('post_type' => 'post', 'orderby' => 'date', 'offset' => $offset, 'posts_per_page' => 2 ));
+	$offset = $_POST['param'];
+	$query = new WP_Query(array('post_type' => 'post', 'post_status'=>'publish', 'orderby' => 'date', 'offset' => $offset ? $offset : 0, 'posts_per_page' => 4 ));
 	$posts = $query->get_posts();
-	include(locate_template( 'test.php' )); 
+	include(locate_template( 'templates/ajax_post_archive.php' )); 
 	die();
 }
 //
@@ -63,9 +60,11 @@ function get_post_by_url() {
 	global $post;
 	$url = $_POST['param'];
 	$id = url_to_postid( $url );
-	$query = new WP_Query(array( 'p' => $id, 'post_type' => 'any' ));
+	die($id);
+	$query = new WP_Query(array( 'p' => $id ));
 	$posts = $query->get_posts();
-	include(locate_template( 'templates/ajax_post.php' )); 
+	include(locate_template( 'templates/ajax_single.php' ));
+	wp_reset_query(); 
 	die();
 }
 

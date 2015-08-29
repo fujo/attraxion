@@ -2,6 +2,17 @@
 
 error_reporting(E_ALL); ini_set('display_errors', 0);
 
+function relativePathForUploads($fileInfos)
+{
+	global $blog_id;
+	$path = get_blog_option($blog_id,'siteurl');
+
+	$fileInfos['url'] = str_replace($path,'',$fileInfos['url']);
+
+	return $fileInfos;
+}
+add_filter('wp_handle_upload', 'relativePathForUploads');
+
 // disallow edition of theme files in wp-admin
 define( 'DISALLOW_FILE_EDIT', true );
 /**
@@ -35,7 +46,7 @@ function attraxion15_setup() {
 	// This theme uses wp_nav_menu() in three locations.
 	register_nav_menus( array(
 			'main' 		=> __( 'Main Menu' ),
-			//'meta' 		=> __( 'Meta Menu' ),
+			'meta' 		=> __( 'Meta Menu' ),
 			'footer' 	=> __( 'Footer Menu' )
 	));
 	/**
@@ -272,6 +283,7 @@ function editglobalcustomfields() { ?>
 */
 require get_template_directory() . '/inc/ajax_functions.php';
 require get_template_directory() . '/inc/cpt_slide.php';
+require get_template_directory() . '/inc/cpt_event.php';
 
 /**
  * Display the classes for the post div and automatically mark the first and last posts

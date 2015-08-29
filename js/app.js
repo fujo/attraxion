@@ -4,56 +4,6 @@
 https://learn.jquery.com/code-organization/concepts/
 
 */
-jQuery(document).ready(function(){
-
-	
-
-	$('#ajax-load').on('click', function(e) {
-
-		e.preventDefault();
-
-		var counter = $('.ajax > .container > .row').length;
-
-		console.log(counter);
-
-		jQuery.ajax({
-			url: ajaxurl,
-			type: 'POST',
-			data: {
-			action: 'get_posts_by_offset',
-			offset: counter
-			},
-			dataType: 'html',
-			success: function(response) {
-				//alert(response);
-				$('.ajax > .container').append(response);
-			}
-		});
-	});
-	
-	function init_links() {
-
-		$('.ajax .columns a').on('click', function(e) {
-
-			e.preventDefault();
-
-			console.log('clicked');
-
-			load_post($(this).attr('data-postid'));
-
-		})
-	}
-
-	function load_post(id) {
-
-		console.log(id);
-
-
-
-	} 
-
-
-});
 ;(function($){
 
 	FastClick.attach(document.body); // instantiate FastClick 
@@ -76,16 +26,18 @@ jQuery(document).ready(function(){
 
 			this.routing._();
 
-			this.cookie._();
+
 			this.autoscroll._();
 			
 			this.magnificpopup._();
 			this.flexslider._();
+
+			this.events._();
 			this.ajax._();
-			this.mainNav._();
-			this.sectionHero._();
+			this.mobileNav._();
+
 			this.parallax._();
-			this.isotope._();
+		
 			this.helpers._();
 
 			this.googleMap._();
@@ -93,12 +45,76 @@ jQuery(document).ready(function(){
 
 		},
 
+		// test device
+
+		responsive: {
+            breakpoints: [
+                {
+                    device: 'smartphoneP',
+                    minWidth: 0, maxWidth: 567
+                },
+                {
+                    device: 'smartphoneL',
+                    minWidth: 568, maxWidth: 767
+                },
+                {
+                    device: 'tabletP',
+                    minWidth: 768, maxWidth: 900
+                },
+                {
+                    device: 'tabletL',
+                    minWidth: 901, maxWidth: 1024
+                },
+                {
+                    device: 'desktop',
+                    minWidth: 1025
+                }
+            ],
+
+            testDevice: function(device) {
+                var breakpoints = APP.responsive.breakpoints,
+                    winWidth = $(window).width();
+
+                for (var i=0; i<breakpoints.length; i++) {
+                    var breakpoint = breakpoints[i];
+                    if (breakpoint.maxWidth == undefined || breakpoint.maxWidth >= winWidth && breakpoint.minWidth <= winWidth) {
+                        if (device == undefined) return breakpoint.device
+                        else {
+                            if (device == breakpoint.device) return true;
+                            else return false;
+                        }
+                    }
+                };
+            }
+        },
+
+
 		routing : {
 
 			_: function() {
 
 
 				var self = this;
+
+				this.route = '';
+
+				this.$mainNav = $('nav.main');
+
+				this.$mainNav.find('a').on('click', function(e){
+					e.preventDefault();
+					//location.replace("http://www.w3schools.com");
+					var the_id = $(this).attr("href");
+
+					$('html, body').animate({
+						scrollTop:$(the_id).offset().top - $('header').outerHeight() / 2 
+					}, 'easeInOutQuint');
+
+					document.location.hash = the_id;
+
+
+				})
+
+
 
 				this.$routes = $('[data-route]');
 
@@ -126,11 +142,7 @@ jQuery(document).ready(function(){
 
 			},
 
-			_scrolling: function() {
-
-
-
-
+			_updateURL: function() {
 
 
 			}
@@ -151,20 +163,7 @@ jQuery(document).ready(function(){
 
 		},
 
-		cookie : {
 
-			_: function() {
-				
-				var name 		= 'app',
-					value 		= -1,
-					expires		= 1, 		// days
-					path 		= '';		// page path
-
-				Cookies.set( name , value, { expires: expires, path: path });
-
-			}
-
-		},
 
 		autoscroll : {
 
@@ -222,6 +221,49 @@ jQuery(document).ready(function(){
 			}
 		},
 
+		events : {
+
+			_: function(){
+
+				var self = this;
+
+				this.$as 			= $('#programme').find('.overview article');
+				this.$overlay 		= $('#ajax-overlay');
+
+				this.$as.on('click', 'a', function(e) {
+					e.preventDefault();
+					self._load( $(this).attr('href') );
+				});
+
+			},
+
+			_load : function(url) {
+
+				var self = this;
+
+				console.log(url);
+
+				// load 7 derniers get_all_posts
+				jQuery.ajax({
+					url: ajaxurl,
+					type: 'POST',
+					data: {
+						action: 'get_post_by_url',
+						param: url
+					},
+					dataType: 'html',
+					success: function(response) {
+						//self._showOverlay(response);
+						//$('#blog').find('.isotope').append(response);
+
+					}
+
+				});
+
+			}
+
+		},
+
 		ajax : {
 			_: function(){
 
@@ -230,18 +272,55 @@ jQuery(document).ready(function(){
 				this.$as 			= $('a.ajax');
 				this.$overlay 		= $('#ajax-overlay');
 
-				this.$as.on('click', function(e) {
+
+
+				this._init();
+
+				this._loadMore();
+
+			},
+
+			_init : function() {
+
+				var self = this;
+
+				// get_all_posts
+				jQuery.ajax({
+					url: ajaxurl,
+					type: 'POST',
+					data: {
+						action: 'get_posts_by_offset'
+					},
+					dataType: 'html',
+					success: function(response) {
+						//self._showOverlay(response);
+						$('#blog').find('.overview').append(response)
+						.find('li').last().addClass('end');
+						//APP.helpers.equalheights._();
+						//self._initOverlay();
+						//self._initIsotope();
+					}
+				});
+
+
+			},
+
+			_initOverlay : function() {
+
+				var self = this;
+
+				$('a.ajax').on('click', function(e) {
 					e.preventDefault();
-					$('body').removeClass('loaded');
+					//$('body').removeClass('loaded');
 					self._request('get_post_by_url', $(this).attr('href'));
 				});
+
 
 			},
 
 			_request : function(action, param) {
 
 				var self = this;
-
 				jQuery.ajax({
 					url: ajaxurl,
 					type: 'POST',
@@ -251,9 +330,7 @@ jQuery(document).ready(function(){
 					},
 					dataType: 'html',
 					success: function(response) {
-
-						self._showOverlay(response);
-						
+						//self._showOverlay(response);
 					}
 				});
 
@@ -268,7 +345,7 @@ jQuery(document).ready(function(){
 					e.preventDefault();
 					self._hideOverlay();
 				})
-				$('body').addClass('loaded noscroll');
+				$('body').addClass('noscroll');
 
 			},
 
@@ -276,6 +353,44 @@ jQuery(document).ready(function(){
 
 				$('body').removeClass('noscroll');
 				this.$overlay.removeClass('show');
+
+			},
+
+			_loadMore : function() {
+
+				var self = this;
+
+				$('.loadmore').on('click', function(e) {
+					var self = this;
+					// request
+					$('body').removeClass('loaded');
+					e.preventDefault();
+					// define offset post to load
+					var count = $('#blog').find('li').length;
+
+						jQuery.ajax({
+							url: ajaxurl,
+							type: 'POST',
+							data: {
+							action: 'get_posts_by_offset',
+							param: count
+							},
+							dataType: 'html',
+							success: function(response) {
+								$('#blog').find('.overview').append(response)
+									.find('li')
+									.removeClass('end')
+									.last().addClass('end');
+							
+								APP.helpers.equalheights._();
+								$('body').addClass('loaded');
+								if(response == '') $('.loadmore').hide();
+
+							},
+
+						});
+
+				})
 
 			}
 
@@ -304,10 +419,10 @@ jQuery(document).ready(function(){
 
 		},
 
-		mainNav : {
+		mobileNav : {
 			_: function(){
 				var self = this;
-				this.$m = $('#mainNavWrapper');
+				this.$m = $('nav.mobile');
 				this.$t = $('.hamburger');
 				this.$t.on('click', function(e){
 					e.preventDefault();
@@ -316,7 +431,7 @@ jQuery(document).ready(function(){
 					self._open();
 				});
 			},
-			_open: function(el){
+			_open: function(){
 				var self = this;
 				this.$m.toggleClass('open');
 
@@ -329,23 +444,6 @@ jQuery(document).ready(function(){
 			_close: function(){
 				this.$m.removeClass('open');
 				this.$t.removeClass('active');
-			}
-		},
-
-		sectionHero : {
-			_: function(){
-
-				var fadeStart=0, 
-					fadeUntil=$win.height();
-
-				$win.on("load resize scroll", function(e){
-					//$("#hero").outerHeight( $win.height() );
-					///////
-    				if($win.scrollTop() == 0) $(".bounce").addClass("start");
-    				else $(".bounce").removeClass("start");
-    				//////
-
-				});
 			}
 		},
 
@@ -368,78 +466,108 @@ jQuery(document).ready(function(){
 			}
 		},
 
-		isotope : {
-			_: function(){
-				$('.isotope').isotope({
-					
-					itemSelector: 'article.item',
-					percentPosition: true,
-					masonry: {
-						// use outer width of grid-sizer for columnWidth
-						columnWidth: 'article.grid-sizer',
-						gutterWidth: 10
-						//gutter: '.gutter-sizer'
-					}
-					/*
-					layoutMode: 'fitRows',
-					itemSelector: 'li',
-					percentPosition: true,
-					fitRows: {
-					  gutter: '.gutter-sizer'
-					}*/
-				});
-			}
-		},
-
-		/* interactive and css things */
+		// this helpers will help, youpi ;-)
+		// they improve HTML/CSS
+		// they dont have any dependecies such as plugins
 
 		helpers : {
 
 			_: function() {
 				this.animation._();
+
+				this.equalheights._();
+
+				this.factsheet._();
+				this.fader._();
 				this.fixHeader._();
+
+				this.jumbotron._();
+
 				this.scrollDown._();
 				this.scrollHome._();
 				this.scrollTo._();
+
 				this.winHeight._();
-				this.fader._();
-				this.jumbotron._();
-				this.factsheet._();
+				
 			},
+
+			// equalize elements heights
+			// "programme articles", "blog articles"
+
+			equalheights : {
+
+				_: function() {
+	                var self = this;
+	                self._equalize();
+	                $win.on('load resize', self._equalize);
+            	},
+
+	            _equalize: function() {
+
+	                $(".equalHeights").each(function() {
+	                    var currentTallest = 0,
+	                        currentRowStart = 0,
+	                        currentDiv = 0,
+	                        rowDivs = new Array(),
+	                        $this,
+	                        topPosition = 0;
+	                    
+	                    $(this).children().each(function() {
+	                        var $this = $(this);
+	                        
+	                        if ($this.is(':visible')) {
+	                            $this.height('auto');
+	                            topPosition = $this.position().top;
+
+	                            if (currentRowStart != topPosition) {
+	                                for (currentDiv = 0; currentDiv < rowDivs.length; currentDiv++) {
+	                                    rowDivs[currentDiv].height(currentTallest);
+	                                }
+	                                rowDivs.length = 0;
+	                                currentRowStart = topPosition;
+	                                currentTallest = $this.height();
+	                                rowDivs.push($this);
+	                            } else {
+	                                rowDivs.push($this);
+	                                currentTallest = (currentTallest < $this.height()) ? ($this.height()) : (currentTallest);
+	                            }
+
+	                            for (currentDiv = 0; currentDiv < rowDivs.length; currentDiv++) {
+	                                rowDivs[currentDiv].height(currentTallest);
+	                            }
+	                        }
+	                    });
+	                });
+	            
+				}
+
+			},
+
+			// css3 animations trigger
+			// animate elements getting in viewport
 
 			animation : {
 
 				_: function() {
 
-
 					$win.on('load scroll resize', function() {
 
 						$('.animation').each(function(){
 						var imagePos = $(this).offset().top;
-
 						var topOfWindow = $(window).scrollTop();
 							if (imagePos < topOfWindow+600 ) {
 								var a = $(this).attr('data-animation');
 								$(this).addClass(a);
 							}
 						});
+
 					});
 
-
-				}
-
-
-			},
-
-			vivus : {
-				_: function() {
-
-					if(!$('#fox').length) { return false; };
-					new Vivus('fox', {type: 'delayed', duration: 100});
-
 				}
 
 			},
+
+			// animate and fix the header
 
 			fixHeader : {
 				_: function() {
@@ -549,16 +677,17 @@ jQuery(document).ready(function(){
 					var self 	= 	this;
 					this.$j 	= 	$('.hero-jumbotron');
 					this.posX;
-					if(this.$j.length < 1){ return false };
+					if(this.$j.length < 1 ){ return false };
 					this._init(); // position in the screen
 					
 					$doc.on('load scroll resize', function(){
-						var top = self.posX - $doc.scrollTop() * - 0.5 ;
+						var top = self.posX - $doc.scrollTop() * -0.5 ;
 						self.$j.css({ 'top': top })
+						//self._init();
 					});
 				},
 				_init: function() {
-					this.posX = ($win.height() / 2 ) - (this.$j.outerHeight() / 1.2) ;
+					this.posX = ($win.height() / 2 ) - (this.$j.outerHeight() / 2) ;
 					this.$j.css({ 'top' : this.posX });
 				}
 			},
@@ -599,11 +728,11 @@ jQuery(document).ready(function(){
 
 		},
 
-		/*
-
-		Google Map
-
-		*/
+		// Google Map configuration
+		// app_globals.lat/lng are global custom fields in wp backend
+		// otherwise nothing special to know, 
+		// yes, it's also an information for you :-) 
+		// cheers!
 
 		googleMap : {
 
@@ -621,7 +750,7 @@ jQuery(document).ready(function(){
 					},
 					rotateControl: false,
 					streetViewControl: false,
-					draggable: true,
+					draggable: $(document).width() > 480 ? true : false, // otherwise blocked on the map
 					panControl: false,
 					scrollwheel: false,
 					mapTypeId: google.maps.MapTypeId.ROADMAP,

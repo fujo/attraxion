@@ -1,0 +1,16 @@
+{
+  "name": "attraxion15",
+  "version": "0.0.0",
+  "homepage": "https://github.com/fujo/attraxion15",
+  "authors": [
+    "fujo <fujo@github.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
